@@ -3,12 +3,13 @@ package com.company;
 import java.util.*;
 
 public class Solver {
-    private Board initial;    //
-    private List<Board> result = new ArrayList<Board>();   // этот лист - цепочка ходов, приводящих к решению задачи
+    private Board initial;
+    private ArrayList<Board> result = new ArrayList<Board>();
 
-    private class ITEM{    // Чтобы узнать длину пути, нам нужно помнить предидущие позиции (и не только поэтому)
-        private ITEM prevBoard;  // ссылка на предыдущий
-        private Board board;   // сама позиция
+
+    private class ITEM{
+        private ITEM prevBoard;
+        private Board board;
 
         private ITEM(ITEM prevBoard, Board board) {
             this.prevBoard = prevBoard;
@@ -18,8 +19,6 @@ public class Solver {
         public Board getBoard() {
             return board;
         }
-
-
     }
 
     public Solver(Board initial) {
@@ -28,9 +27,8 @@ public class Solver {
         if(!isSolvable()){
             result=null;
             return;
-        }  //  сначала можно проверить, а решаема ли задача?
+        }
 
-        //  очередь. Для нахождения приоритетного сравниваем меры
         PriorityQueue<ITEM> priorityQueue = new PriorityQueue<ITEM>(10, new Comparator<ITEM>() {
             @Override
             public int compare(ITEM o1, ITEM o2) {
@@ -38,14 +36,11 @@ public class Solver {
             }
         });
 
-
-        // шаг 1
         priorityQueue.add(new ITEM(null, initial));
 
         while (true){
-            ITEM board = priorityQueue.poll(); //  шаг 2
+            ITEM board = priorityQueue.poll();
 
-            //   если дошли до решения, сохраняем весь путь ходов в лист
             if(board.board.isGoal()) {
                 itemToList(new ITEM(board, board.board));
                 return;
@@ -56,9 +51,6 @@ public class Solver {
             while (iterator.hasNext()){
                 Board board1 = (Board) iterator.next();
 
-                //оптимизация. Очевидно, что один из соседей - это позиция
-                // которая была ходом раньше. Чтобы не возвращаться в состояния,
-                // которые уже были делаем проверку. Экономим время и память.
                 if(board1!= null && !containsInPath(board, board1))
                     priorityQueue.add(new ITEM(board, board1));
             }
@@ -66,7 +58,16 @@ public class Solver {
         }
     }
 
-    //  вычисляем f(x)
+    public Movement isMovement(Board prevBoard, Board curBoard){
+        if(prevBoard.getZeroY()+1==curBoard.getZeroY())
+            return Movement.RIGHT;
+        else if(prevBoard.getZeroY()-1==curBoard.getZeroY())
+            return Movement.LEFT;
+        else if(prevBoard.getZeroX()+1==curBoard.getZeroX())
+            return Movement.DOWN;
+        else return Movement.UP;
+    }
+    //f(x)
     private static int measure(ITEM item){
         ITEM item2 = item;
         int c= 0;   // g(x)
@@ -81,7 +82,6 @@ public class Solver {
         }
     }
 
-    //  сохранение
     private void itemToList(ITEM item){
         ITEM item2 = item;
         while (true){
@@ -94,7 +94,6 @@ public class Solver {
         }
     }
 
-    // была ли уже такая позиция в пути
     private boolean containsInPath(ITEM item, Board board){
         ITEM item2 = item;
         while (true){
@@ -110,11 +109,12 @@ public class Solver {
         int size = initial.getBlocks().length;
         int[] a = new int[size*size];
         int k = -1;
-        for (int i=0; i<size; i++)
-            for (int j=0; j<size; j++) {
+        for (int i=0; i<size; i++) {
+            for (int j = 0; j < size; j++) {
                 k += 1;
                 a[k] = board[i][j];
             }
+        }
 
         int sum = 0;
         for (int i=0; i<a.length; i++) {
@@ -145,9 +145,7 @@ public class Solver {
         return result.size() - 1;
     }
 
-
-    // все ради этого метода - чтобы вернуть result
-    public Iterable<Board> solution() {
+    public ArrayList<Board> solution() {
         return result;
     }
 }

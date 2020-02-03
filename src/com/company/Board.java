@@ -4,19 +4,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Board {
-    private int[][] blocks; //   Наше поле. пустое место будем обозначать нулем.
-    private int zeroX;    // это нам пригодится в будущем - координаты нуля
+    private int[][] blocks;
+    private int zeroX;
     private int zeroY;
-    private int h; //  мера
+    private int h;
 
     public Board(int[][] blocks) {
-        int[][] blocks2 = deepCopy(blocks);   //   копируем, так как нам нужно быть уверенными в неизменяемости
+        int[][] blocks2 = deepCopy(blocks);
         this.blocks = blocks2;
 
         h = 0;
-        for (int i = 0; i < blocks.length; i++) {  //  в этом цикле определяем координаты нуля и вычисляем h(x)
+        for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks[i].length; j++) {
-                if (blocks[i][j] != (i*dimension() + j + 1) && blocks[i][j] != 0) {  // если 0 не на своем месте - не считается
+                if (blocks[i][j] != (i*dimension() + j + 1) && blocks[i][j] != 0) {
                     h += 1;
                 }
                 if (blocks[i][j] == 0) {
@@ -36,7 +36,7 @@ public class Board {
         return h;
     }
 
-    public boolean isGoal() {  //   если все на своем месте, значит это искомая позиция
+    public boolean isGoal() {
         return h == 0;
     }
 
@@ -60,9 +60,7 @@ public class Board {
         return true;
     }
 
-    public Iterable<Board> neighbors() {  // все соседние позиции
-        // меняем ноль с соседней клеткой, то есть всего 4 варианта
-        // если соседнего нет (0 может быть с краю), chng(...) вернет null
+    public Iterable<Board> neighbors() {
         Set<Board> boardList = new HashSet<Board>();
         boardList.add(chng(getNewBlock(), zeroX, zeroY, zeroX, zeroY + 1));
         boardList.add(chng(getNewBlock(), zeroX, zeroY, zeroX, zeroY - 1));
@@ -72,12 +70,11 @@ public class Board {
         return boardList;
     }
 
-    private int[][] getNewBlock() { //  опять же, для неизменяемости
+    private int[][] getNewBlock() {
         return deepCopy(blocks);
     }
 
-    private Board chng(int[][] blocks2, int x1, int y1, int x2, int y2) {  //  в этом методе меняем два соседних поля
-
+    private Board chng(int[][] blocks2, int x1, int y1, int x2, int y2) {
         if (x2 > -1 && x2 < dimension() && y2 > -1 && y2 < dimension()) {
             int t = blocks2[x2][y2];
             blocks2[x2][y2] = blocks2[x1][y1];
@@ -113,6 +110,14 @@ public class Board {
             }
         }
         return result;
+    }
+
+    public int getZeroX() {
+        return zeroX;
+    }
+
+    public int getZeroY() {
+        return zeroY;
     }
 
     public int[][] getBlocks() {

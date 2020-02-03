@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -37,11 +38,27 @@ public class Main {
     private static void writeResultToFile(Path outputFilePath, Solver solver) throws IOException {
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(outputFilePath.toString()))) {
             if(solver.solution()==null){
-                bw.write(-1);
+                bw.write("-1");
             }
             else{
-                for (Board board : solver.solution())
-                    bw.write(board.toString());
+                ArrayList<Board> result = solver.solution();
+                String s="Initial configuration:\n"+ result.get(0).toString()+
+                        "\nNumber of tiles movements:"+(result.size()-1);
+                for (int i=1; i<result.size();i++){
+                    switch (solver.isMovement(result.get(i-1),result.get(i)))
+                    {
+                        case LEFT:
+                            s+="\nLeft\n"; break;
+                        case RIGHT:
+                            s+="\nRight\n"; break;
+                        case DOWN:
+                            s+="\nDown\n"; break;
+                        case UP:
+                            s+="\nUp\n"; break;
+                    }
+                    s += result.get(i).toString();
+                }
+                bw.write(s);
             }
 
         }
