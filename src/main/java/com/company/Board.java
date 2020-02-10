@@ -70,11 +70,11 @@ public class Board {
         return boardList;
     }
 
-    private int[][] getNewBlock() {
+    public int[][] getNewBlock() {
         return deepCopy(blocks);
     }
 
-    private Board chng(int[][] blocks2, int x1, int y1, int x2, int y2) {
+    public Board chng(int[][] blocks2, int x1, int y1, int x2, int y2) {
         if (x2 > -1 && x2 < dimension() && y2 > -1 && y2 < dimension()) {
             int t = blocks2[x2][y2];
             blocks2[x2][y2] = blocks2[x1][y1];
