@@ -46,8 +46,7 @@ public class Solver {
                 return;
             }
 
-            //   шаг 3
-            Iterator iterator = board.board.neighbors().iterator(); // соседи
+            Iterator iterator = board.board.neighbors().iterator();
             while (iterator.hasNext()){
                 Board board1 = (Board) iterator.next();
 
@@ -67,11 +66,12 @@ public class Solver {
             return Movement.DOWN;
         else return Movement.UP;
     }
+
     //f(x)
     private static int measure(ITEM item){
         ITEM item2 = item;
         int c= 0;   // g(x)
-        int measure = item.getBoard().h();  // h(x)
+        int measure = item.getBoard().getCountNumbersStandingOutOfPlace();  // h(x)
         while (true){
             c++;
             item2 = item2.prevBoard;
@@ -140,12 +140,8 @@ public class Solver {
 
     }
 
-    public int moves() {
-        if(!isSolvable()) return -1;
-        return result.size() - 1;
-    }
 
-    public ArrayList<Board> solution() {
+    public ArrayList<Board> getResult() {
         return result;
     }
 }

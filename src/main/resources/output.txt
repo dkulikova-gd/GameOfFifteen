@@ -1,17 +1,23 @@
 Initial configuration:
- 1  2  3  4 
- 5  6  7  8 
- 0  9 10 12 
+ 1  2  4  0 
+ 5  6  3  8 
+ 9 10  7 12 
 13 14 11 15 
 
-Number of tiles movements:4
-Right
- 1  2  3  4 
- 5  6  7  8 
- 9  0 10 12 
+Number of tiles movements:5
+Left
+ 1  2  0  4 
+ 5  6  3  8 
+ 9 10  7 12 
 13 14 11 15 
 
-Right
+Down
+ 1  2  3  4 
+ 5  6  0  8 
+ 9 10  7 12 
+13 14 11 15 
+
+Down
  1  2  3  4 
  5  6  7  8 
  9 10  0 12 

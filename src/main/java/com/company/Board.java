@@ -7,37 +7,37 @@ public class Board {
     private int[][] blocks;
     private int zeroX;
     private int zeroY;
-    private int h;
+    private int countNumbersStandingOutOfPlace;
 
     public Board(int[][] blocks) {
-        int[][] blocks2 = deepCopy(blocks);
-        this.blocks = blocks2;
+        this.blocks = blocks;
 
-        h = 0;
+        countNumbersStandingOutOfPlace = 0;
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks[i].length; j++) {
-                if (blocks[i][j] != (i*dimension() + j + 1) && blocks[i][j] != 0) {
-                    h += 1;
-                }
                 if (blocks[i][j] == 0) {
-                    zeroX = (int) i;
-                    zeroY = (int) j;
+                    zeroX =  i;
+                    zeroY =  j;
                 }
+                else if (blocks[i][j] != (i* getBlockLength() + j + 1)) {
+                    countNumbersStandingOutOfPlace += 1;
+                }
+
             }
         }
     }
 
 
-    public int dimension() {
+    public int getBlockLength() {
         return blocks.length;
     }
 
-    public int h() {
-        return h;
+    public int getCountNumbersStandingOutOfPlace() {
+        return countNumbersStandingOutOfPlace;
     }
 
     public boolean isGoal() {
-        return h == 0;
+        return countNumbersStandingOutOfPlace == 0;
     }
 
 
@@ -48,7 +48,7 @@ public class Board {
 
         Board board = (Board) o;
 
-        if (board.dimension() != dimension()) return false;
+        if (board.getBlockLength() != getBlockLength()) return false;
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks[i].length; j++) {
                 if (blocks[i][j] != board.blocks[i][j]) {
@@ -62,20 +62,20 @@ public class Board {
 
     public Iterable<Board> neighbors() {
         Set<Board> boardList = new HashSet<Board>();
-        boardList.add(chng(getNewBlock(), zeroX, zeroY, zeroX, zeroY + 1));
-        boardList.add(chng(getNewBlock(), zeroX, zeroY, zeroX, zeroY - 1));
-        boardList.add(chng(getNewBlock(), zeroX, zeroY, zeroX - 1, zeroY));
-        boardList.add(chng(getNewBlock(), zeroX, zeroY, zeroX + 1, zeroY));
+        boardList.add(changePosition(getNewBlock(), zeroX, zeroY, zeroX, zeroY + 1));
+        boardList.add(changePosition(getNewBlock(), zeroX, zeroY, zeroX, zeroY - 1));
+        boardList.add(changePosition(getNewBlock(), zeroX, zeroY, zeroX - 1, zeroY));
+        boardList.add(changePosition(getNewBlock(), zeroX, zeroY, zeroX + 1, zeroY));
 
         return boardList;
     }
 
     public int[][] getNewBlock() {
-        return deepCopy(blocks);
+        return copy(blocks);
     }
 
-    public Board chng(int[][] blocks2, int x1, int y1, int x2, int y2) {
-        if (x2 > -1 && x2 < dimension() && y2 > -1 && y2 < dimension()) {
+    public Board changePosition(int[][] blocks2, int x1, int y1, int x2, int y2) {
+        if (x2 > -1 && x2 < getBlockLength() && y2 > -1 && y2 < getBlockLength()) {
             int t = blocks2[x2][y2];
             blocks2[x2][y2] = blocks2[x1][y1];
             blocks2[x1][y1] = t;
@@ -97,7 +97,7 @@ public class Board {
         return s.toString();
     }
 
-    private static int[][] deepCopy(int[][] original) {
+    private static int[][] copy(int[][] original) {
         if (original == null) {
             return null;
         }

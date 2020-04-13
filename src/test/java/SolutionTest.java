@@ -1,15 +1,7 @@
 import com.company.Board;
 import com.company.Solver;
-import com.company.exceptions.EmptyFileException;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static com.company.Main.readFromFile;
 
 public class SolutionTest {
 
@@ -21,7 +13,7 @@ public class SolutionTest {
         Board board = new Board(matrix);
         Solver solver = new Solver(board);
 
-        Board result = solver.solution().get(solver.solution().size()-1);
+        Board result = solver.getResult().get(solver.getResult().size()-1);
 
         Assert.assertEquals(expectedBoard, result);
     }
@@ -33,6 +25,6 @@ public class SolutionTest {
 
         Solver solver = new Solver(board);
 
-        Assert.assertEquals(null,solver.solution());
+        Assert.assertEquals(null,solver.getResult());
     }
 }
